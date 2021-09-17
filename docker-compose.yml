@@ -1,0 +1,37 @@
+version: "3"
+services:
+  application:
+    build:
+      context: ./services/application
+      dockerfile: Dockerfile
+      args:
+        - "PYTHON_VERSION=${PYTHON_VERSION}"
+    volumes:
+      - "${APPLICATION_PROJECT_PATH:?err}:/application"
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    tty: true
+  database:
+    build:
+      context: ./services/database
+      dockerfile: Dockerfile
+    volumes:
+      - "volume-db:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-password}"
+      - "MYSQL_DATABASE=${MYSQL_DATABASE:-sampledb}"
+      - "MYSQL_USER=${MYSQL_USER:-sampluser}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD:-password}"
+  web:
+    build:
+      context: ./services/web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      # - "443:443"
+volumes:
+  volume-db:
