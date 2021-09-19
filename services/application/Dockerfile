@@ -28,3 +28,5 @@ RUN \
     rm -rf ~/.cache/pip/*
 
 USER ${USERNAME}
+
+CMD [ "bash" ]
